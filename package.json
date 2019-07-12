@@ -1,0 +1,23 @@
+{
+  "name": "black_jack_functional_approach",
+  "version": "1.0.0",
+  "description": "",
+  "main": "BlackJack_Functional_approach.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node BlackJack_Functional_Approach.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/DandyReyes/Blackjack_functional.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/DandyReyes/Blackjack_functional/issues"
+  },
+  "homepage": "https://github.com/DandyReyes/Blackjack_functional#readme",
+  "dependencies": {
+    "readline-sync": "^1.4.9"
+  }
+}

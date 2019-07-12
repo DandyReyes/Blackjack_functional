@@ -2,6 +2,7 @@
  * Goal: Outputs 4 cards, 2 to dealer and 2 to player
  */
 
+const readlinesync = require('readline-sync');
 // Get random index for the suit array
 function randSuitIndex(randomSuit) {
   const indexSuit = Math.floor(Math.random() * randomSuit.length);
@@ -33,20 +34,33 @@ function getTotal(total) {
 }
 
 // Show what cards you got!
-function joinWeightAndSuit(joinedArr, suit, weight, i) {
+function joinWeightAndSuit(unjoinedArr, emptySuitArr, emptyWeightArr, index) {
   // add the suit to array
-  suit.push(getSuit());
+  emptySuitArr.push(getSuit());
   // add the weight to the array
-  weight.push(getWeight());
+  emptyWeightArr.push(getWeight());
   // join arrays to get an output like ♥️9
-  joinedArr[i] = suit[i] + weight[i];
+  unjoinedArr[index] = emptySuitArr[index] + emptyWeightArr[index];
+}
+
+function joinCard(joinedArr, suitArr, weightArr) {
+  // add the suit to array
+  suitArr.push(getSuit());
+  // add the weight to the array
+  weightArr.push(getWeight());
+  // join arrays to get an output like ♥️9
+  joinedArr.push(suitArr[suitArr.length - 1] + weightArr[weightArr.length - 1]);
 }
 
 // Figure this out
-function getHand(joinedArr, suit, weight) {
+function getHand(unjoinedArr, emptySuitArr, emptyWeightArr) {
   for (let i = 0; i < 2; i++) {
-    joinWeightAndSuit(joinedArr, suit, weight, i);
+    joinWeightAndSuit(unjoinedArr, emptySuitArr, emptyWeightArr, i);
   }
+}
+
+function getCard(joinedArr, SuitArr, WeightArr) {
+  joinCard(joinedArr, SuitArr, WeightArr);
 }
 
 // Show message
@@ -55,7 +69,7 @@ function showHand(hand) {
 }
 
 function getResults(playerTotal, dealerTotal) {
-  if (playerTotal > dealerTotal) {
+  if (playerTotal > dealerTotal && playerTotal <= 21) {
     console.log('Player Wins!');
   } else if (playerTotal < dealerTotal) {
     console.log('Dealer wins');
@@ -79,13 +93,35 @@ function blackJack() {
   getHand(joinedPlayer, playerSuits, playerWeight);
   getHand(joinedDealer, dealerSuits, dealerWeight);
   // Store the player and dealer total
-  const playerTotal = getTotal(playerWeight);
+  let playerTotal = getTotal(playerWeight);
   const dealerTotal = getTotal(dealerWeight);
   // Show the cards
   showHand(joinedPlayer);
   showHand(joinedDealer);
-  // Get the results of the game
-  getResults(playerTotal, dealerTotal);
+
+  // To allow the player hit if they want
+  let bool = true;
+  while (bool) {
+    if (playerTotal < 21) {
+      const hitMe = readlinesync.keyInYN('Would you like another card?');
+      bool = hitMe;
+      if (bool) {
+        getCard(joinedPlayer, playerSuits, playerWeight);
+        showHand(joinedPlayer);
+        playerTotal = getTotal(playerWeight);
+        if (playerTotal > 21) {
+          console.log('BUST! You lose');
+          break;
+        } else if (playerTotal === 21) {
+          getResults(playerTotal, dealerTotal);
+          bool = false;
+        }
+      }
+    }
+  }
+  if (!bool) {
+    getResults(playerTotal, dealerTotal);
+  }
 }
 
 blackJack();
