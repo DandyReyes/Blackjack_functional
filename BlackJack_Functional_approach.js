@@ -70,9 +70,9 @@ function showHand(hand) {
 
 function getResults(playerTotal, dealerTotal) {
   if (playerTotal > dealerTotal && playerTotal <= 21) {
-    console.log('Player Wins!');
+    console.log(`Player Wins! ${playerTotal} to ${dealerTotal}`);
   } else if (playerTotal < dealerTotal) {
-    console.log('Dealer wins');
+    console.log(`Dealer wins ${dealerTotal} to ${playerTotal}`);
   } else {
     console.log('draw');
   }
@@ -89,6 +89,9 @@ function blackJack() {
   const joinedDealer = [];
   const joinedPlayer = [];
 
+  console.log(
+    '~~~~~~~~~~~~~~~~~~~~~~\n Welcome to BlackJack!\n~~~~~~~~~~~~~~~~~~~~~~\n'
+  );
   // Get and store the player's hand
   getHand(joinedPlayer, playerSuits, playerWeight);
   getHand(joinedDealer, dealerSuits, dealerWeight);
@@ -96,29 +99,37 @@ function blackJack() {
   let playerTotal = getTotal(playerWeight);
   const dealerTotal = getTotal(dealerWeight);
   // Show the cards
+  console.log(`Player: ${playerTotal}`);
   showHand(joinedPlayer);
+  console.log(`Dealer: ${dealerTotal}`);
   showHand(joinedDealer);
 
   // To allow the player hit if they want
-  let bool = true;
+  let bool = playerTotal !== 21;
   while (bool) {
     if (playerTotal < 21) {
+      // Get user input
       const hitMe = readlinesync.keyInYN('Would you like another card?');
       bool = hitMe;
+      // If player decides to continue, get new result
       if (bool) {
         getCard(joinedPlayer, playerSuits, playerWeight);
         showHand(joinedPlayer);
         playerTotal = getTotal(playerWeight);
+        console.log(`You have ${playerTotal}`);
+        // Getting new results!
         if (playerTotal > 21) {
-          console.log('BUST! You lose');
+          console.log(`BUST! You lose  ${playerTotal}`);
           break;
         } else if (playerTotal === 21) {
-          getResults(playerTotal, dealerTotal);
           bool = false;
         }
       }
     }
   }
+
+  // If while loop runs successfully and doesn't break
+  // then get the results
   if (!bool) {
     getResults(playerTotal, dealerTotal);
   }
